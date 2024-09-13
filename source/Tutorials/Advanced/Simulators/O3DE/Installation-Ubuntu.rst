@@ -1,11 +1,11 @@
 Installation (Ubuntu)
 ======================================
 
-**Goal:** Install the package and run simulation examples on Ubuntu.
+**Goal:** Install Open 3D Engine (O3DE) from the .deb package and run a simulation using the O3DE-extras template.
 
 **Tutorial level:** Advanced
 
-**Time:** 15 minutes
+**Time:** 20-30 minutes
 
 .. contents:: Contents
    :depth: 2
@@ -14,7 +14,7 @@ Installation (Ubuntu)
 Background
 -------------
 
-This tutorial will guide you through the steps to set up Open 3D Engine (O3DE) directly from the GitHub repository on a Linux system. This guide assumes you are not creating a fork of the repository.
+This tutorial will guide you through the steps to install Open 3D Engine (O3DE) from a .deb package and set up the O3DE-extras package for simulation on Ubuntu. The guide minimizes terminal use and focuses on GUI-based steps where possible.
 
 Prerequisites
 -------------
@@ -22,17 +22,13 @@ Prerequisites
 It is recommended to understand basic ROS principles covered in the beginner :doc:`../../../../Tutorials`.
 In particular, :doc:`../../../Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace` and :doc:`../../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package` are useful prerequisites.
 
-Before you begin, ensure you have the following installed on your Linux system:
+Before you begin, ensure you have the following:
 
-- **Git**: To clone the O3DE repository.
-- **CMake (version 3.20 or later)**: For building the project.
-- **Ninja or Make**: Build systems supported by O3DE.
-- **Python (version 3.7 or later)**: Required for various scripts.
-- **Clang (version 12 or later)**: The recommended compiler for O3DE.
-
+- **ROS 2 installed**: The o3de-extras package assumes that ROS 2 is already installed on your system.
 
 Setting up O3DE from GitHub on Linux
 ------------------------------------
+
 Step 1: Install Required Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -104,67 +100,19 @@ Now, build O3DE using the ``cmake`` command:
 This command builds O3DE in ``profile`` mode, which is recommended for development. You can replace ``profile`` with ``debug`` or ``release`` depending on your needs.
 
 
-Step 6: Create or Open a Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Download and Install o3de-extras 
+----------------------------------
 
-With O3DE set up, you can create a new project or open an existing one.
-To create a new project:
+Downloading a .zip package 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: bash
+   1. Navigate to the `o3de-extras GitHub repository <https://github.com/o3de/o3de-extras>`_.
+   2. Download the necessary files as a ZIP package. To do this, click the **Code** button on the repository's main page and select **Download ZIP**.
+   3. Once the ZIP file is downloaded, extract its contents to a folder of your choice.
 
-   ./scripts/o3de.sh create-project --project-path <path-to-your-project> --template Default
-
-Replace ``<path-to-your-project>`` with the desired directory for your new project.
-
-To open an existing project, navigate to the project directory and use the following command:
-
-.. code-block:: bash
-
-   ./scripts/o3de.sh edit-project --project-path <path-to-existing-project>
-
-Step 7: Launch the O3DE Editor
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Finally, launch the O3DE Editor by running:
-
-.. code-block:: bash
-
-   ./build/bin/profile/Editor
-
-This command starts the O3DE Editor in ``profile`` mode.
-
-
-Install ``o3de-extras``
------------------------
-
-Clone the Repository
-^^^^^^^^^^^^^^^^^^^^
-To get started, clone the ``o3de-extras`` repository:
-
-.. code-block:: bash
-
-   git clone https://github.com/o3de/o3de-extras
 
 Setting up o3de-extras
 ^^^^^^^^^^^^^^^^^^^^^^
-The ``o3de-extras`` repository can be cloned to any location on your local machine. Once cloned, you need to switch to the ``stablization`` branch of the repository. Run the following command to check on what branch you're working at the moment:
-
-.. code-block:: bash
-
-   git branch
-
-If you are on the ``development`` branch, you will need to switch. Run this command to find the name of the latest stabilization branch:
-
-.. code-block:: bash
-
-   git branch -a
-
-Now you can ``git checkout`` to our desired branch, for example:
-
-.. code-block:: bash
-
-   git checkout stabilization/2409 
-
 
 Now, you need to inform O3DE about the location of the extra assets in this repository by registering them. From the O3DE repository folder, you can register some or all of the extra assets using the ``o3de register`` command. Since these are optional assets, you may choose to register only those that you need. For example, to register a specific gem, use the following command:
 
@@ -193,3 +141,86 @@ If you've registered a gem, which functions like a plugin or component within a 
 .. code-block:: bash
 
    ./scripts/o3de.sh enable-gem --gem-name <gem name> --project-name <project name>
+
+
+Setting Up and Running a Simulation
+------------------------------------
+
+Creating a New ROS 2 Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. **Register the ROS 2 Project Template**:
+
+   Navigate to your O3DE directory and register the ROS 2 Project Template from the ``o3de-extras`` repository:
+
+   .. code-block:: bash
+
+      ./scripts/o3de.sh register --all-templates-path <path-to-o3de-extras>/Templates
+
+   This command registers all templates within the ``o3de-extras`` repository, including the ROS 2 Project Template.
+
+2. **Create a New Project**:
+
+   Create a new project using the ROS 2 Project Template:
+
+   .. code-block:: bash
+
+      ./scripts/o3de.sh create-project --project-name <project_name> --template-name Ros2ProjectTemplate --project-path <path-to-project-directory>
+
+   Replace ``<project_name>`` with your desired project name and ``<path-to-project-directory>`` with the directory where you want the project to be created.
+
+3. **Configure and build the Project**:
+
+   After creating the project, you need to cofigure and build it:
+
+   Navigate to your project directory:
+
+   .. code-block:: bash
+
+      cd <project_path>
+
+   .. code-block:: bash
+
+      cmake -B build/ -S . -G "Ninja Multi-Config"
+
+   .. code-block:: bash
+
+      cmake --build <path-to-build-directory> --target <project_name> Editor
+
+   Ensure the build completes without errors.
+
+Setting Up the SLAM Navigation Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ROS 2 Project Template includes several example projects. In this tutorial, you will use the SLAM navigation example to simulate a robot performing SLAM and navigation tasks.
+
+1. **Navigate to the Example Directory**:
+
+   The SLAM navigation example is located in the following directory:
+
+   .. code-block:: bash
+
+      <project-directory>/Examples/slam_navigation
+
+2. **Run the Example**:
+
+   Launch the example by opening the O3DE Editor:
+
+   .. code-block:: bash
+
+      <path-to-o3de-directory>/build/bin/profile/Editor
+
+   Once in the Editor, open the SLAM navigation level by navigating to the ``Levels`` tab and selecting the SLAM navigation level.
+
+   Press ``Ctrl+G`` to start the simulation.
+
+3. **Launching ROS 2 Nodes**:
+
+   In a new terminal, source your ROS 2 environment and launch the ROS 2 nodes required for SLAM and navigation:
+
+   .. code-block:: bash
+
+      source /opt/ros/foxy/setup.bash
+      ros2 launch slam_navigation slam_navigation_launch.py
+
+   This command starts the ROS 2 nodes, enabling the robot in the simulation to perform SLAM and navigation.
