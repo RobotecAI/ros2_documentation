@@ -7,7 +7,7 @@
 Simulators
 ==========
 
-Several advanced robot simulators can be used with ROS 2, such as Gazebo, Webots, etc.
+Several advanced robot simulators can be used with ROS 2, such as Gazebo, Webots, O3DE, etc.
 Unlike turtlesim, they provide fairly realistic results relying on physics-based models for robots, sensors, actuators and objects.
 Hence, what you observe in simulation is very close to what you will get when transferring your ROS 2 controllers to a real robot.
 

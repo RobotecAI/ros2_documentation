@@ -1,7 +1,7 @@
 Installation (Ubuntu)
-======================================
+========================
 
-**Goal:** Install Open 3D Engine (O3DE) from the .deb package and run a simulation using the O3DE-extras template.
+**Goal:** Install Open 3D Engine (O3DE) SDK, add O3DE simulation modules and build a project using provided template.
 
 **Tutorial level:** Advanced
 
@@ -14,213 +14,127 @@ Installation (Ubuntu)
 Background
 -------------
 
-This tutorial will guide you through the steps to install Open 3D Engine (O3DE) from a .deb package and set up the O3DE-extras package for simulation on Ubuntu. The guide minimizes terminal use and focuses on GUI-based steps where possible.
+This tutorial will guide you through the steps to install Open 3D Engine (O3DE) SDK using a *.deb* package and set up the O3DE simulation modules on Ubuntu Linux. Finally, you will create a project using a provided template and start the simulation. The guide minimizes terminal use and focuses on GUI-based steps where possible.
 
 Prerequisites
--------------
+----------------
 
 It is recommended to understand basic ROS principles covered in the beginner :doc:`../../../../Tutorials`.
-In particular, :doc:`../../../Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace` and :doc:`../../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package` are useful prerequisites.
 
-Before you begin, ensure you have the following:
+Set up O3DE from *.deb* package on Ubuntu Linux and creating a new project
+-----------------------------------------------------------------------------
 
-- **ROS 2 installed**: The o3de-extras package assumes that ROS 2 is already installed on your system.
-
-Setting up O3DE from GitHub on Linux
-------------------------------------
-
-Step 1: Install Required Dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-First, install the necessary dependencies by running the following commands in your terminal:
-
-.. code-block:: bash
-
-   sudo apt-get update
-   sudo apt-get install -y build-essential ninja-build python3 python3-pip python3-venv \
-                           libglu1-mesa-dev libxcb-xinerama0 libxcb-xinput0 libxcb-xinput-dev \
-                           libfontconfig1 libssl-dev uuid-dev clang lld
-
-Step 2: Clone the O3DE Repository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Next, clone the O3DE repository from GitHub:
-
-.. code-block:: bash
-
-   git clone https://github.com/o3de/o3de.git
-   cd o3de
-
-This command downloads the O3DE source code into a directory named ``o3de`` and changes the current working directory to it.
-
-Step 3: Configure the O3DE Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. @TODO: Restricted in manifest file
-
-Run the ``cmake`` command to configure the project. This will generate the necessary build files in the ``build`` directory.
-
-.. code-block:: bash
-
-   cmake -B build/ -S . -G "Ninja Multi-Config"
-
-Here’s what each argument does:
-
-- ``-B build/``: Specifies the output directory for the build files.
-- ``-S .``: Specifies the source directory (current directory).
-- ``-G "Ninja Multi-Config"``: Specifies Ninja as the build system with multi-config support.
-
-If you experience any issues regarding the ``restricted.json`` file, try opening the ``o3de_manifest.json``:
-
-.. code-block:: bash
-
-   nano ~/.o3de/o3de_manifest.json
-
-then, remove the ``restricted`` list located in the file.
-
-Step 4: Set Up the Project Environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before building the O3DE, you need to set up the project environment. Run the following script to do so:
-
-.. code-block:: bash
-
-   ./scripts/o3de.sh register --this-engine
-
-This command registers the engine, allowing you to create and manage projects with O3DE.
-
-Step 5: Build O3DE
-^^^^^^^^^^^^^^^^^^
-
-Now, build O3DE using the ``cmake`` command:
-
-.. code-block:: bash
-
-   cmake --build build/ --config profile
-
-This command builds O3DE in ``profile`` mode, which is recommended for development. You can replace ``profile`` with ``debug`` or ``release`` depending on your needs.
-
-
-Download and Install o3de-extras 
-----------------------------------
-
-Downloading a .zip package 
+Step 1: Install O3DE SDK
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   1. Navigate to the `o3de-extras GitHub repository <https://github.com/o3de/o3de-extras>`_.
-   2. Download the necessary files as a ZIP package. To do this, click the **Code** button on the repository's main page and select **Download ZIP**.
-   3. Once the ZIP file is downloaded, extract its contents to a folder of your choice.
-
-
-Setting up o3de-extras
-^^^^^^^^^^^^^^^^^^^^^^
-
-Now, you need to inform O3DE about the location of the extra assets in this repository by registering them. From the O3DE repository folder, you can register some or all of the extra assets using the ``o3de register`` command. Since these are optional assets, you may choose to register only those that you need. For example, to register a specific gem, use the following command:
+First, download the recent O3DE binary package from the `O3DE website <https://www.o3de.org/>`_. Next, install the downloaded package in your system.
 
 .. code-block:: bash
 
-   ./scripts/o3de.sh register --gem-path <o3de-extras>/Gems/<gem name>
+   sudo dpkg -i ~/Downloads/o3de_2409_1.deb
 
-If you want to register all the gems, you can do so since the repository follows the standard O3DE compound repository structure, with all gems located in the ``<o3de-extras>/Gems`` directory. To register all gems at once, use:
+Note: The name of the binary and the location depends on the newest available O3DE version and the download location.
 
-.. code-block:: bash
+Step 2: Run O3DE and add required Gems
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   ./scripts/o3de.sh register --all-gems-path <o3de-extras>/Gems
+O3DE is built using modular components known as Gems. As you work on a project, you can enhance it by adding Gems that provide specific features and functionality. These Gems can include a variety of resources, such as materials, textures, and models, development tools, or complete runtime systems such as the renderer, AI, and Physics. The following instructions explain how to start O3DE and install Gems required for the selected project template.
 
-This process can be repeated for any other object types, if they exist:
+First source the ROS 2 environment, if not done already.
 
-.. code-block:: bash
+.. code-block:: console
 
-   ./scripts/o3de.sh register --all-engines-path <o3de-extras>/Engines
-   ./scripts/o3de.sh register --all-projects-path <o3de-extras>/Projects
-   ./scripts/o3de.sh register --all-gems-path <o3de-extras>/Gems
-   ./scripts/o3de.sh register --all-templates-path <o3de-extras>/Templates
-   ./scripts/o3de.sh register --all-restricted-path <o3de-extras>/Restricted
+   source /opt/ros/{DISTRO}/setup.bash
 
-If you've registered a gem, which functions like a plugin or component within a project, and you wish to use it in your project, you need to enable it by using the ``o3de enable-gem`` command:
+Next, start O3DE project manager:
 
 .. code-block:: bash
 
-   ./scripts/o3de.sh enable-gem --gem-name <gem name> --project-name <project name>
+   o3de
 
+Finally, switch to **Gems** tab and hit the *refresh* button in the top right corner first, to ensure the system finds the newest Gems' versions available. Download the following Gems by clicking **Download Gem** button in the bottom right corner for each Gem:
 
-Setting Up and Running a Simulation
-------------------------------------
+- ROS2
+- RosRobotSample
+- WarehouseSample
 
-Creating a New ROS 2 Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+You might want to use the search tool to find Gems quicker:
 
-1. **Register the ROS 2 Project Template**:
+.. image:: Image/Gem_install.png
 
-   Navigate to your O3DE directory and register the ROS 2 Project Template from the ``o3de-extras`` repository:
+Do not close the window after finishing.
 
-   .. code-block:: bash
+Step 3: Configure the O3DE Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-      ./scripts/o3de.sh register --all-templates-path <path-to-o3de-extras>/Templates
+Switch back to **Projects** tab in your O3DE Project Manager window and select **Create New Project** option from the **New Project** dropdown menu to create a new simulation project. It's name, location on the hard drive, and version can be modified in the next window. Note down the project location and the name for the later use.
 
-   This command registers all templates within the ``o3de-extras`` repository, including the ROS 2 Project Template.
+The project can be build based on one of the templates. *ROS2 Project* template is used in this and in the following tutorials. Select it and click **Download Template** button to pull it from the Internet.
 
-2. **Create a New Project**:
+.. image:: Image/Project_create.png
 
-   Create a new project using the ROS 2 Project Template:
+O3DE will save it in ``~/O3DE/Templates`` folder by default. Click **Create Project** to get your simulation ready to be built.
 
-   .. code-block:: bash
+Step 4: Build the O3DE Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-      ./scripts/o3de.sh create-project --project-name <project_name> --template-name Ros2ProjectTemplate --project-path <path-to-project-directory>
+O3DE SDK lets you use the game (simulation) Editor directly. In this case, only elements from the engine itself will be available. That includes the default renderer, physics engines, basic assets, etc. If you want to use any extra source code (e.g., from the external Gems or the template) you need to rebuild the project. A *warning* sign in the top right corner of the project's thumbnail notifies about it. Select **Build** option from the **Build Project** dropdown list to proceed.
 
-   Replace ``<project_name>`` with your desired project name and ``<path-to-project-directory>`` with the directory where you want the project to be created.
+.. image:: Image/Project_build.png
 
-3. **Configure and build the Project**:
+The graphical user interface will call *cmake* and the compiler to build the code. You will notice the *warning* sign disappearing. Next, Click **Open Editor** to open your simulation.
 
-   After creating the project, you need to cofigure and build it:
+Note: the O3DE Editor will scan and build all available assets when running for the first time. This might take few minutes.
 
-   Navigate to your project directory:
+Set up and run the simulation
+--------------------------------
 
-   .. code-block:: bash
+Try O3DE Editor
+^^^^^^^^^^^^^^^^^^
+O3DE Editor is a comprehensive interface that allows developers to design, build, and manage game or simulation environments and assets visually. You might use it to manipulate your robots, change ROS 2 sensors, and configure the test scene. Some complete examples are given in the following tutorials.
 
-      cd <project_path>
+Open ``Levels/DemoLevel`` level from the project's folder. You will see the *ROSBot XL* robot by Husarion in a simple warehouse. Spend some time browsing the interface of the Editor. When ready, hit the *play* icon or press ``Ctrl+G`` shortcut on the keyboard to start the game (simulation) mode (you can switch back to the edit mode with ``Esc`` key).
 
-   .. code-block:: bash
+When starting the game mode of O3DE, you start the ROS 2 Node that allows you to communicate with your simulation using ROS 2 framework. Open a new terminal, source the ROS 2 environment and see the available topics:
 
-      cmake -B build/ -S . -G "Ninja Multi-Config"
+.. code-block:: console
 
-   .. code-block:: bash
+   source /opt/ros/{DISTRO}/setup.bash
+   ros2 topic list
 
-      cmake --build <path-to-build-directory> --target <project_name> Editor
+Multiple topics will be listed, including a ROS 2 clock published at */clock* topic. This clock is reset at every start of the simulation. */scan* and */cmd_vel* topics are the examples of a publisher and a subscriber implemented on a robot. The first one is used for Lidar and can be visualized in any of the ROS 2 tools, such as *RViz2*. The latter, */cmd_vel*, waits for the data to change linear and angular speed of the robot. You might try it by asking the robot to move forward, e.g.:
 
-   Ensure the build completes without errors.
+.. code-block:: console
 
-Setting Up the SLAM Navigation Example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   source /opt/ros/{DISTRO}/setup.bash
+   ros2 topic pub /cmd_vel geometry_msgs/Twist  "linear: { x: 0.5 }"
 
-The ROS 2 Project Template includes several example projects. In this tutorial, you will use the SLAM navigation example to simulate a robot performing SLAM and navigation tasks.
+Additionally, the robot contains the O3DE component that captures cursor keys and translates them into */cmd_vel* messages. Hence, you can drive your robot using the keyboard.
 
-1. **Navigate to the Example Directory**:
+Run SLAM Navigation Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   The SLAM navigation example is located in the following directory:
+The *ROS 2 Project* Template includes several ROS 2 examples. In this tutorial, you will use the SLAM navigation to simulate a robot performing SLAM and navigation tasks.
 
-   .. code-block:: bash
+1. **Run the Simulation**
 
-      <project-directory>/Examples/slam_navigation
+   Open the O3DE Editor as explained earlier and press ``Ctrl+G`` to start the game mode.
 
-2. **Run the Example**:
+2. **Navigate to the Example Directory**:
 
-   Launch the example by opening the O3DE Editor:
+   The SLAM navigation example is located in the ``<project-directory>/Examples/slam_navigation`` directory. By default, it is located in ``~/O3DE/Projects/<project-name>``. Navigate to this directory in a new terminal.
 
-   .. code-block:: bash
+   .. code-block:: console
 
-      <path-to-o3de-directory>/build/bin/profile/Editor
+      cd <project-directory>/Examples/slam_navigation
 
-   Once in the Editor, open the SLAM navigation level by navigating to the ``Levels`` tab and selecting the SLAM navigation level.
-
-   Press ``Ctrl+G`` to start the simulation.
-
-3. **Launching ROS 2 Nodes**:
+3. **Launch ROS 2 Example**:
 
    In a new terminal, source your ROS 2 environment and launch the ROS 2 nodes required for SLAM and navigation:
 
-   .. code-block:: bash
+   .. code-block:: console
 
-      source /opt/ros/foxy/setup.bash
+      source /opt/ros/{DISTRO}/setup.bash
       ros2 launch slam_navigation slam_navigation_launch.py
 
-   This command starts the ROS 2 nodes, enabling the robot in the simulation to perform SLAM and navigation.
+   This command starts the RViz2 window. Set robot target goal by using the *2D Goal Pose* tool in the upper toolbar. The robot in your simulation should be on its way to the goal! You will also notice it is building a map.
