@@ -12,31 +12,33 @@ Installation (Ubuntu)
    :local:
 
 Background
--------------
+----------
 
 This tutorial will guide you through the steps to install Open 3D Engine (O3DE) SDK using a *.deb* package and set up the O3DE simulation modules on Ubuntu Linux. Finally, you will create a project using a provided template and start the simulation. The guide minimizes terminal use and focuses on GUI-based steps where possible.
 
 Prerequisites
-----------------
+-------------
 
 It is recommended to understand basic ROS principles covered in the beginner :doc:`../../../../Tutorials`.
 
+This tutorial is compatible with version 2409.1 of Open 3D Engine (O3DE), as well as upcoming versions.
+
 Set up O3DE from *.deb* package on Ubuntu Linux and creating a new project
------------------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 Step 1: Install O3DE SDK
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 First, download the recent O3DE binary package from the `O3DE website <https://www.o3de.org/>`_. Next, install the downloaded package in your system.
 
 .. code-block:: bash
 
-   sudo dpkg -i ~/Downloads/o3de_2409_1.deb
+   sudo apt install <path_to_deb_package>/<debian_package_name>.deb
 
-Note: The name of the binary and the location depends on the newest available O3DE version and the download location.
+Note: The name of the binary `<debian_package_name>` and the location `<path_to_deb_package>` depends on the newest available O3DE version and the download location. `~/Downloads/o3de_2409_2.dep`
 
 Step 2: Run O3DE and add required Gems
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 O3DE is built using modular components known as Gems. As you work on a project, you can enhance it by adding Gems that provide specific features and functionality. These Gems can include a variety of resources, such as materials, textures, and models, development tools, or complete runtime systems such as the renderer, AI, and Physics. The following instructions explain how to start O3DE and install Gems required for the selected project template.
 
@@ -65,7 +67,7 @@ You might want to use the search tool to find Gems quicker:
 Do not close the window after finishing.
 
 Step 3: Configure the O3DE Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Switch back to **Projects** tab in your O3DE Project Manager window and select **Create New Project** option from the **New Project** dropdown menu to create a new simulation project. It's name, location on the hard drive, and version can be modified in the next window. Note down the project location and the name for the later use.
 
@@ -76,7 +78,7 @@ The project can be build based on one of the templates. *ROS2 Project* template 
 O3DE will save it in ``~/O3DE/Templates`` folder by default. Click **Create Project** to get your simulation ready to be built.
 
 Step 4: Build the O3DE Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 O3DE SDK lets you use the game (simulation) Editor directly. In this case, only elements from the engine itself will be available. That includes the default renderer, physics engines, basic assets, etc. If you want to use any extra source code (e.g., from the external Gems or the template) you need to rebuild the project. A *warning* sign in the top right corner of the project's thumbnail notifies about it. Select **Build** option from the **Build Project** dropdown list to proceed.
 
@@ -87,10 +89,10 @@ The graphical user interface will call *cmake* and the compiler to build the cod
 Note: the O3DE Editor will scan and build all available assets when running for the first time. This might take few minutes.
 
 Set up and run the simulation
---------------------------------
+-----------------------------
 
 Try O3DE Editor
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 O3DE Editor is a comprehensive interface that allows developers to design, build, and manage game or simulation environments and assets visually. You might use it to manipulate your robots, change ROS 2 sensors, and configure the test scene. Some complete examples are given in the following tutorials.
 
 Open ``Levels/DemoLevel`` level from the project's folder. You will see the *ROSBot XL* robot by Husarion in a simple warehouse. Spend some time browsing the interface of the Editor. When ready, hit the *play* icon or press ``Ctrl+G`` shortcut on the keyboard to start the game (simulation) mode (you can switch back to the edit mode with ``Esc`` key).
@@ -112,7 +114,7 @@ Multiple topics will be listed, including a ROS 2 clock published at */clock* to
 Additionally, the robot contains the O3DE component that captures cursor keys and translates them into */cmd_vel* messages. Hence, you can drive your robot using the keyboard.
 
 Run SLAM Navigation Example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The *ROS 2 Project* Template includes several ROS 2 examples. In this tutorial, you will use the SLAM navigation to simulate a robot performing SLAM and navigation tasks.
 
