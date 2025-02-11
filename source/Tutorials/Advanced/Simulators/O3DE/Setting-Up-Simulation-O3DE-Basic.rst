@@ -6,7 +6,7 @@
 Setting up a robot simulation (Basic)
 =====================================
 
-**Goal:** Setup a robot simulation and control it from ROS 2.
+**Goal:** Modify a simulation scene and display data transmitted over ROS 2 framework.
 
 **Tutorial level:** Advanced
 
@@ -26,23 +26,43 @@ Prerequisites
 -------------
 
 This is a continuation of the first part of the tutorial: :doc:`./Installation-Ubuntu`.
-It is mandatory to start with the first part to ensure the project is based on the correct template and build successfully.
+It is mandatory to start with the first part to ensure the project based on the correct template is build successfully.
 
 Sample simulation modifications using O3DE Editor
 -------------------------------------------------
 
 1. Quick tour over O3DE Editor and ``rosbot_xl`` prefab
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- explain entity outlier, inspector, asset browser, list ROS2 components of ``rosbot_xl`` prefab
 
-2. Updating ``rosbot_xl`` prefab
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- add camera to ``rosbot_xl``
+The basic interface of the O3DE Editor consists of the *Entity Outliner* panel on the left side of the window and the *Inspector* panel on the right side. Note, that the default layout can be modified: the tools can be moved freely. The first tool, *Entity Outliner*, lists all entities in the scene. Each entity is built up from the number of optional components, such as mesh, ROS 2 sensors, colliders, joints, etc. Components can be added and removed using the *Inspector*. Each entity can have some child entities to build a tree structure. E.g. a robot body entity can be linked with four entities representing wheels. 
+
+An entity or a structure of entities, can be stored as a *prefab*. This way, the same part of the simulation (e.g. a robot) can be reused in different projects or easily duplicated in the scene. Each prefab can be additionally modified with some *overrides*, which change one or multiple parts of the *prefab*, to handle the variations of the repeatable objects. Such modifications are stored within a game level or another *prefab*. The Husarion ROSBot XL robot in ``Levels/DemoLevel`` level is an example of such *prefab*.  The ``rosbot_xl`` entity tree, with some basic components such as colliders, robot control and sensors, is stored as a *prefab*, which is encapsulated in ``rosbot_xl_slamtec`` *prefab*. The outer layer adds a Slamtec Lidar sensor to the robot (other variations are available in the Gem), while the ``rosbot_xl`` *prefab* has no lidar sensor.
+
+2. Updating ``rosbot_xl`` prefab: add the camera sensor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Click on the *rosbot_xl_slamtec prefab* in the *Entity Outliner* panel on the left and drill down to *rosbot_xl→body_link→cover_link* entity. Right click on *cover_link* and select *Create Entity*. A new entity named ``Entity1`` will be created. Select it in the *Entity Outliner*. You might want to change the name (use the right click or press *F2* key). Navigate to the *Inspector* panel on the right. First, modify the *Transform Component* with the following translation values: ``{0.05, 0.0, 0.05}``. This way your newly created entity will be located 5 cm to the front of the robot and 5 cm above the *cover_link* origin. Additionally, add *-90* degrees and *90* degrees rotations around the *X* and *Y* axes respectively. The rotation cancels out the difference in the coordinate systems between O3DE and ROS 2 definition. Finally, add *ROS2 Frame* and *ROS2 Camera Sensor* components using *Add Component* button in the *Inspector* panel. Adjust the namespace of the sensor (within *ROS2 Frame* component) and the parameters of the camera if necessary. By default, RGBD data is streamed over ROS 2 topics ``/camera_image_color`` and ``/camera_image_depth``.
+
+This tutorial assumes the ``rosbot_xl`` robot is modified using *overrides*, but you might want to add the camera sensor to the *prefab*, which would add it to any instance in any project (it is a part of the Gem that is stored within O3DE codebase). Double-click on the *prefab* name iin the *Entity Outliner* panel to open the edit mode for the selected *prefab* and press escape key to switch back to *override* mode. 
+
+To see the effect of adding a camera sensor to the robot, start the game mode in O3DE Editor and open RViz2 application from a new terminal. Add an image feed that will read from the camera topic. Click on ‘Add’ at the bottom of the left panel, and select the ‘By topic’ tab. Select *Image* under the ``/camera_image_color`` topic (or any other you set in the O3DE Editor) and confirm to create the new Image item in the Displays tab. Keep in mind, the image might not be visible due to some misconfiguration. By default, O3DE uses *Best effort* reliability policy, while RViz2 sets *Reliable* initially. Change either of the two to match the other to secure data transmission.
+
+The ROS 2 launcher described in the previous tutorial can be used to move the robot around the scene. Similarly, it can be navigated using cursor keys on the keyboard or by sending a velocity message to its ``/cmd_vel`` control topic.
+
+Quit the game mode by pressing *ESC* on the keyboard to finish. Close all RViz2 windows.
 
 3. Add ``rosbot_xl_slamtec`` prefab to the scene
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- add overrides to make two robots different
+*Asset Browser* panel in the bottom of the default O3DE Editor layout is used to add more objects to the scene. Those can be either *prefabs* or visual assets (meshes). Use a search window in the top-left corner to find ``ROSBot.prefab``. Next, drag and drop it to the scene to get a second robot in the simulation. Both robots have the same configuration, which would result in a collision of messages transmitted using ROS 2. This problem can be solved by the namespace modification in any of the two. Head to the ``body_link`` of the previously added robot in the *Entity Outliner* panel. Next, find the *ROS 2 Frame Component* in the *Inspector* panel and modify the namespace configuration as presented below. In this example, the *Namespace Setting* is *Custom* and the name itself is *second*. The change is made as an *override*, which is marked with a blue dot in the O3DE Editor. The local modification ensures the correct communication within this simulation without changing any other uses of Husarion ROSbot XL robot.
 
-4. Add ROS2 spawner to the scene
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- add spawner, spawn multiple robots
+Start the simulation and open a terminal to see the available ROS 2 topics. Besides standard topics available in any O3DE simulation using ROS 2, such as ``/clock``, ``/rosout`` and ``tf``, you will also see the topics published by your robots. In particular, the first robot publishes the Lidar data (topic ``/scan``), allows for the control using the ``/cmd_vel`` topic, and publish the camera sensor's data over multiple topics, as configured earlier. The second robot, which is not equipped with neither a Lidar nor a camera sensor, creates only the robot control topic, which is additionally namespaced: ``/second/cmd_vel``. 
+
+Publish a message to start the movement of the second robot. Next, publish a message to rotate the first one.
+
+ .. tabs::
+
+    .. group-tab:: Linux
+
+       .. code-block:: console
+
+        ros2 topic pub /second/cmd_vel geometry_msgs/Twist "linear: { x: 0.1 }"
+        ros2 topic pub /cmd_vel geometry_msgs/Twist "angular: { z: 0.5 }"
