@@ -40,13 +40,13 @@ Note: The name of the binary `<debian_package_name>` and the location `<path_to_
 Step 2: Run O3DE and add required Gems
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-O3DE is built using modular components known as Gems. As you work on a project, you can enhance it by adding Gems that provide specific features and functionality. These Gems can include a variety of resources, such as materials, textures, and models, development tools, or complete runtime systems such as the renderer, AI, and Physics. The following instructions explain how to start O3DE and install Gems required for the selected project template.
+O3DE is built using modular components known as Gems. A Gem is defined literally as any folder containing a valid *gem.json* and *CMakeLists.txt* at its root. The first file gives the metadata about the Gem, such as its name, version, and description, while the second one contains the build instructions for the Gem. As you work on a project, you can enhance it by adding Gems that provide specific features and functionality. These Gems can include a variety of resources, such as materials, textures, and models, development tools, or complete runtime systems such as the renderer, AI, and Physics. The following instructions explain how to start O3DE and install Gems required for the selected project template.
 
 First source the ROS 2 environment, if not done already.
 
 .. code-block:: console
 
-   source /opt/ros/{DISTRO}/setup.bash
+   source /opt/ros/${ROS_DISTRO}/setup.bash
 
 Next, start O3DE project manager:
 
@@ -101,15 +101,15 @@ When starting the game mode of O3DE, you start the ROS 2 Node that allows you to
 
 .. code-block:: console
 
-   source /opt/ros/{DISTRO}/setup.bash
+   source /opt/ros/${ROS_DISTRO}/setup.bash
    ros2 topic list
 
 Multiple topics will be listed, including a ROS 2 clock published at */clock* topic. This clock is reset at every start of the simulation. */scan* and */cmd_vel* topics are the examples of a publisher and a subscriber implemented on a robot. The first one is used for lidar and can be visualized using ROS 2 tools, such as *RViz2*. The latter, */cmd_vel*, waits for the data to change linear and angular velocity of the robot. You might try it by asking the robot to move forward, e.g.:
 
 .. code-block:: console
 
-   source /opt/ros/{DISTRO}/setup.bash
-   ros2 topic pub /cmd_vel geometry_msgs/Twist  "linear: { x: 0.5 }"
+   source /opt/ros/${ROS_DISTRO}/setup.bash
+   ros2 topic pub /cmd_vel geometry_msgs/Twist "linear: { x: 0.5 }"
 
 Additionally, the robot contains the O3DE component that captures cursor keys and translates them into */cmd_vel* messages. Hence, you can drive your robot using the keyboard.
 
@@ -136,7 +136,9 @@ The *ROS 2 Project* Template includes several ROS 2 examples. In this tutorial, 
 
    .. code-block:: console
 
-      source /opt/ros/{DISTRO}/setup.bash
+      source /opt/ros/${ROS_DISTRO}/setup.bash
       ros2 launch slam_navigation slam_navigation_launch.py
 
    This command starts the RViz2 window. Set robot target goal by using the *2D Goal Pose* tool in the upper toolbar. The robot in your simulation should be on its way to the goal! Incoming lidar messages will build the map as the robot moves.
+
+   The ROS 2 communication is handled by the ROS 2 Node running in the background, which allows you to interact with the simulation using ROS 2 topics. The project template includes additional component, that can be used to transmit the target goal to the robot. It is connected to a debug interface of O3DE, that can be switched on and off by pressing ``Home`` key on the keyboard. Besides O3DE Debug tools, you will see the interface implemented in this project. This interface allows to send one of the predefined target goals to the ROS 2 Navigation stack running in the simulation similarly to the *RViz2* tool.
