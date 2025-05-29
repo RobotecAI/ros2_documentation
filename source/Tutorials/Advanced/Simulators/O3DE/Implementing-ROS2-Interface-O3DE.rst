@@ -1,7 +1,7 @@
 Setting up a robot simulation (Advanced)
 ========================================
 
-**Goal:** Setup a robot simulation and control it from ROS 2.
+**Goal:** Learn the steps to set up and execute a ROS 2 topics and services in O3DE.
 
 **Tutorial level:** Advanced
 
@@ -14,22 +14,13 @@ Setting up a robot simulation (Advanced)
 Background
 ----------
 
-In this tutorial, you will use the Open 3D Engine (O3DE) to set up and execute a ROS 2 robotic manipulation simulation.
-
-The ``o3de-extras`` repository offers additional tools and templates to enhance O3DE projects with ROS 2 functionality. In this tutorial, you will use the ``Ros2RoboticManipulationTemplate`` from the ``o3de-extras`` repository. This template provides a foundation for integrating ROS 2 with O3DE to simulate robotic manipulation tasks in a virtual environment. It includes predefined configurations and examples to demonstrate how to control and interact with robotic manipulators within O3DE.
-
-For detailed instructions and further examples on using the ROS 2 Robotic Manipulation Template, you can refer to the `O3DE ROS 2 Robotic Manipulation Template <https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate>`_ page.
-
+In this tutorial you will extend the project created in the first tutorial: :doc:`./Setting-Up-Simulation-O3DE`. In particular, you will deep dive into the C++ implementation of the ROS 2 interfaces in O3DE. The aim is to learn how to implement ROS 2 topics and services in O3DE to control and interact with robots and simulation environments.
 
 Prerequisites
 -------------
-Ensure you have the following before starting:
 
-- O3DE set up on your machine. For instructions, follow the `O3DE installation for Ubuntu <Installation-Ubuntu>` guide.
-- ROS 2 (Foxy or later) installed on your system.
-- The ``o3de-extras`` repository cloned locally (on the ``stabilization`` branch).
-- **MoveIt**, which is used for motion planning in ROS 2. Follow the MoveIt 2 documentation for installation instructions.
-
+This is a continuation of the first tutorial: :doc:`./Setting-Up-Simulation-O3DE`.
+It is mandatory to create the project based on its instructions and to get the working environment before starting this part.
 
 Creating a New ROS 2 Project
 ----------------------------

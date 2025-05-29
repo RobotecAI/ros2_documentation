@@ -1,7 +1,7 @@
 Installation (Ubuntu)
-========================
+=====================
 
-**Goal:** Install Open 3D Engine (O3DE) SDK, add O3DE simulation modules and build a project using provided template.
+**Goal:** Install Open 3D Engine (O3DE) SDK, add O3DE simulation modules and build a project using the provided template.
 
 **Tutorial level:** Advanced
 
@@ -21,7 +21,7 @@ Prerequisites
 
 It is recommended to understand basic ROS principles covered in the beginner :doc:`../../../../Tutorials`.
 
-This tutorial is compatible with version 2409.1 of Open 3D Engine (O3DE), as well as upcoming versions.
+This tutorial is compatible with version 2409.2 of Open 3D Engine (O3DE), as well as upcoming versions.
 
 Set up O3DE from *.deb* package on Ubuntu Linux and creating a new project
 --------------------------------------------------------------------------
@@ -84,7 +84,7 @@ O3DE SDK lets you use the game (simulation) Editor directly. In this case, only 
 
 .. image:: Image/Project_build.png
 
-The graphical user interface will call *cmake* and the compiler to build the code. All source files from the project template and externa gems (such as ROS 2 Gem) will be compiled. You will notice the *warning* sign disappearing. Next, Click **Open Editor** to open your simulation.
+The graphical user interface will call *cmake* and the compiler to build the code. All source files from the project template and external gems (such as ROS 2 Gem) will be compiled. You will notice the *warning* sign disappearing. Next, Click **Open Editor** to open your simulation.
 
 Note: the O3DE Editor will scan and build all available assets when running for the first time. This might take few minutes.
 
@@ -104,7 +104,7 @@ When starting the game mode of O3DE, you start the ROS 2 Node that allows you to
    source /opt/ros/{DISTRO}/setup.bash
    ros2 topic list
 
-Multiple topics will be listed, including a ROS 2 clock published at */clock* topic. This clock is reset at every start of the simulation. */scan* and */cmd_vel* topics are the examples of a publisher and a subscriber implemented on a robot. The first one is used for Lidar and can be visualized using ROS 2 tools, such as *RViz2*. The latter, */cmd_vel*, waits for the data to change linear and angular velocity of the robot. You might try it by asking the robot to move forward, e.g.:
+Multiple topics will be listed, including a ROS 2 clock published at */clock* topic. This clock is reset at every start of the simulation. */scan* and */cmd_vel* topics are the examples of a publisher and a subscriber implemented on a robot. The first one is used for lidar and can be visualized using ROS 2 tools, such as *RViz2*. The latter, */cmd_vel*, waits for the data to change linear and angular velocity of the robot. You might try it by asking the robot to move forward, e.g.:
 
 .. code-block:: console
 
@@ -139,4 +139,4 @@ The *ROS 2 Project* Template includes several ROS 2 examples. In this tutorial, 
       source /opt/ros/{DISTRO}/setup.bash
       ros2 launch slam_navigation slam_navigation_launch.py
 
-   This command starts the RViz2 window. Set robot target goal by using the *2D Goal Pose* tool in the upper toolbar. The robot in your simulation should be on its way to the goal! Incoming Lidar messages will build the map as the robot moves.
+   This command starts the RViz2 window. Set robot target goal by using the *2D Goal Pose* tool in the upper toolbar. The robot in your simulation should be on its way to the goal! Incoming lidar messages will build the map as the robot moves.

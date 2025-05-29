@@ -19,14 +19,14 @@ Setting up a robot simulation (Basic)
 Background
 ----------
 
-In this tutorial you will extend the project created in the first tutorial: :doc:`./Installation-Ubuntu`.
-The aim is to learn how O3DE Editor works and how it can be used to modify the simulation scene, existing robots, and ROS 2 interfaces.
+In this tutorial you will modify the project created in the first tutorial: :doc:`./Setting-Up-Simulation-O3DE`.
+The aim is to learn the basic tools of the O3DE Editor and to understand how to modify the simulation scene, existing robots, and configure ROS 2 interfaces.
 
 Prerequisites
 -------------
 
-This is a continuation of the first part of the tutorial: :doc:`./Installation-Ubuntu`.
-It is mandatory to start with the first part to ensure the project based on the correct template is build successfully.
+This is a continuation of the first tutorial: :doc:`./Setting-Up-Simulation-O3DE`.
+It is mandatory to create the project based on its instructions and to get the working environment before starting this part.
 
 Sample simulation modifications using O3DE Editor
 -------------------------------------------------
@@ -45,7 +45,7 @@ Click on the *rosbot_xl_slamtec prefab* in the *Entity Outliner* panel on the le
 
 .. image:: Image/Editor_camera.png
 
-This tutorial assumes the ``rosbot_xl`` robot is modified using *overrides*, but you might want to add the camera sensor to the *prefab*, which would add it to any instance in any project (it is a part of the Gem that is stored within O3DE codebase). Double-click on the *prefab* name iin the *Entity Outliner* panel to open the edit mode for the selected *prefab* and press escape key to switch back to *override* mode. An comparison of the two modes is presented below, with the *override* mode on the left (the *camera_sensor* entity is added to the *cover_link* as an *override*) and *prefab* modification on the right (lidar and camera sensor entities are missing).
+This tutorial assumes the ``rosbot_xl`` robot is modified using *overrides*, but you might want to add the camera sensor to the *prefab*, which would add it to any instance in any project (it is a part of the Gem that is stored within O3DE codebase). Double-click on the *prefab* name in the *Entity Outliner* panel to open the edit mode for the selected *prefab* and press escape key to switch back to *override* mode. An comparison of the two modes is presented below, with the *override* mode on the left (the *camera_sensor* entity is added to the *cover_link* as an *override*) and *prefab* modification on the right (lidar and camera sensor entities are missing).
 
 .. image:: Image/Editor_override.png
 
@@ -68,11 +68,7 @@ Start the simulation and open a terminal to see the available ROS 2 topics. Besi
 
 Publish a message to start the movement of the second robot. Next, publish a message to rotate the first one.
 
- .. tabs::
+.. code-block:: console
 
-    .. group-tab:: Linux
-
-       .. code-block:: console
-
-        ros2 topic pub /second/cmd_vel geometry_msgs/Twist "linear: { x: 0.1 }"
-        ros2 topic pub /cmd_vel geometry_msgs/Twist "angular: { z: 0.5 }"
+   ros2 topic pub /second/cmd_vel geometry_msgs/Twist "linear: { x: 0.1 }"
+   ros2 topic pub /cmd_vel geometry_msgs/Twist "angular: { z: 0.5 }"
